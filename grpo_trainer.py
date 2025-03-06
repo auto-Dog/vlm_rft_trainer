@@ -221,6 +221,7 @@ class Qwen2VLGRPOTrainer(Trainer):
             self.ref_model = None
 
         # Processing class
+        pad_token_id = None # in case the error of local variable 'pad_token_id' referenced before assignment
         if processing_class is None:
             if "Qwen2-VL" in model_id or "Aria" in model_id:
                 print('>>>>>>>>>>>>>>>> trigger None branch') # debug
