@@ -220,10 +220,9 @@ class Qwen2VLGRPOTrainer(Trainer):
             self.ref_model = None
 
         # Processing class
-        pad_token_id = None # in case the error of local variable 'pad_token_id' referenced before assignment
+        pad_token_id = tokenizer.pad_token_id # in case the error of local variable 'pad_token_id' referenced before assignment
         if processing_class is None:
             if "Qwen2-VL" in model_id or "Aria" in model_id:
-                print('>>>>>>>>>>>>>>>> trigger None branch') # debug
                 processing_class = AutoProcessor.from_pretrained(model_id)
                 pad_token_id = processing_class.tokenizer.pad_token_id
                 processing_class.pad_token_id = pad_token_id
@@ -232,9 +231,8 @@ class Qwen2VLGRPOTrainer(Trainer):
                     processing_class.image_processor.max_pixels = max_pixels
                     processing_class.image_processor.min_pixels = min_pixels
             else:
-                print('>>>>>>>>>>>>>>>> trigger Exist branch') # debug
-                # processing_class = AutoTokenizer.from_pretrained(model.config._name_or_path, padding_side="left") # use current processer
-                pad_token_id = processing_class.tokenizer.pad_token_id  # debug
+                processing_class = AutoTokenizer.from_pretrained(model.config._name_or_path, padding_side="left") # use current processer
+                pad_token_id = processing_class.pad_token_id  # debug
         print('>>>>>>>>>>>>>>>> pad_id:',pad_token_id) # debug
 
         # Reward functions
