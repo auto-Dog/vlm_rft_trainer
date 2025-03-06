@@ -158,7 +158,6 @@ class Qwen2VLGRPOTrainer(Trainer):
         min_pixels: Optional[int] = 3136,
         attn_implementation: str = "flash_attention_2",
     ):
-        print('>>>>>>>>>>>>>>>> trigger Begin branch') # debug
         # Args
         if args is None:
             model_name = model if isinstance(model, str) else model.config._name_or_path
