@@ -230,9 +230,9 @@ class Qwen2VLGRPOTrainer(Trainer):
                     processing_class.image_processor.max_pixels = max_pixels
                     processing_class.image_processor.min_pixels = min_pixels
             else:
-                processing_class = AutoTokenizer.from_pretrained(model.config._name_or_path, padding_side="left")
-                print('>>>>>>>>>>>>>>>> pad_id:',processing_class.pad_token_id) # debug
-                pad_token_id = processing_class.pad_token_id
+                # processing_class = AutoTokenizer.from_pretrained(model.config._name_or_path, padding_side="left") # use current processer
+                pad_token_id = processing_class.tokenizer.pad_token_id  # debug
+                print('>>>>>>>>>>>>>>>> pad_id:',pad_token_id) # debug
 
         # Reward functions
         if not isinstance(reward_funcs, list):
