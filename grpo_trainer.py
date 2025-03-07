@@ -371,7 +371,7 @@ class Qwen2VLGRPOTrainer(Trainer):
         )
         prompt_inputs = super()._prepare_inputs(prompt_inputs)
         # debug datatype
-        prompt_inputs['pixel_values'] = prompt_inputs['pixel_values'].to(self.dtype)
+        prompt_inputs['pixel_values'] = prompt_inputs['pixel_values'].half()
         for all_item in prompt_inputs.keys():
             to_print_type = prompt_inputs[all_item].dtype if isinstance(prompt_inputs[all_item],torch.Tensor) else ''   
             print('Item:',all_item,',dtype:',to_print_type)
