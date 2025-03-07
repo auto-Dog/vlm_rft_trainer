@@ -371,11 +371,10 @@ class Qwen2VLGRPOTrainer(Trainer):
         )
         prompt_inputs = super()._prepare_inputs(prompt_inputs)
         # debug datatype
-        prompt_inputs['pixel_values'] = prompt_inputs['pixel_values'].to(torch.int64)
-        for all_item in prompt_inputs.keys():
-            
-            to_print_type = prompt_inputs[all_item].dtype if isinstance(prompt_inputs[all_item],torch.Tensor) else ''   
-            print('Item:',all_item,',dtype:',to_print_type)
+        prompt_inputs['pixel_values'] = prompt_inputs['pixel_values'].half()
+        # for all_item in prompt_inputs.keys():
+        #     to_print_type = prompt_inputs[all_item].dtype if isinstance(prompt_inputs[all_item],torch.Tensor) else ''   
+        #     print('Item:',all_item,',dtype:',to_print_type)
 
         if self.max_prompt_length is not None:
             prompt_inputs["input_ids"] = prompt_inputs["input_ids"][:, -self.max_prompt_length :]
