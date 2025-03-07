@@ -168,6 +168,27 @@ class Qwen2VLGRPOTrainer(Trainer):
         # Trained model
         model_init_kwargs = args.model_init_kwargs or {}
         model_init_kwargs["attn_implementation"] = attn_implementation
+        # new, to set dtype
+        def _get_dtype(dtype):
+            __DTYPE_MAP = {
+                "float32": torch.float32,
+                torch.float32: torch.float32,
+                "float16": torch.float16,
+                torch.float16: torch.float16,
+                "bfloat16": torch.bfloat16,
+                torch.bfloat16: torch.bfloat16,
+            }
+            if   dtype is None or dtype == None: return None
+            elif dtype in __DTYPE_MAP: return __DTYPE_MAP[dtype]
+            else:
+                print(f"Unsloth: {dtype} is not recognized, so we'll default to None")
+                return None
+        self.dtype = _get_dtype(
+            model.config.torch_dtype \
+            if hasattr(model.config, "torch_dtype") else \
+            model.get_input_embeddings().weight.dtype
+        )
+
         if isinstance(model, str):
             model_id = model
             torch_dtype = model_init_kwargs.get("torch_dtype")
@@ -409,8 +430,8 @@ class Qwen2VLGRPOTrainer(Trainer):
         prompt_inputs.pop("attention_mask")
         # Okay I am assuming that the inputs are Qwen2VL processor
         # and no video for now, repeat the image for each completion
-        prompt_inputs["pixel_values"] = prompt_inputs["pixel_values"].repeat(len(prompt_completion_ids), 1)
-        prompt_inputs["image_grid_thw"] = prompt_inputs["image_grid_thw"].repeat(len(prompt_completion_ids), 1)
+        prompt_inputs["pixel_values"] = prompt_inputs["pixel_values"].repeat(len(prompt_completion_ids), 1).to(self.dtype)  # new
+        prompt_inputs["image_grid_thw"] = prompt_inputs["image_grid_thw"].repeat(len(prompt_completion_ids), 1).to(self.dtype)  # new
         per_token_logps = get_per_token_logps(model, prompt_completion_ids, **prompt_inputs)
         # Get rid of the prompt (-1 because of the shift done in get_per_token_logps)
         per_token_logps = per_token_logps[:, prompt_length - 1 :]
