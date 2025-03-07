@@ -375,7 +375,7 @@ class Qwen2VLGRPOTrainer(Trainer):
         for all_item in prompt_inputs.keys():
             
             to_print_type = prompt_inputs[all_item].dtype if isinstance(prompt_inputs[all_item],torch.Tensor) else ''   
-            print('Item:',all_item,',dtype:',prompt_inputs[all_item])
+            print('Item:',all_item,',dtype:',to_print_type)
 
         if self.max_prompt_length is not None:
             prompt_inputs["input_ids"] = prompt_inputs["input_ids"][:, -self.max_prompt_length :]
