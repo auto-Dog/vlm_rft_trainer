@@ -220,9 +220,9 @@ class Qwen2VLGRPOTrainer(Trainer):
                     "You passed `model_init_kwargs` to the `GRPOConfig`, but your model is already instantiated. "
                     "This argument can only be used when the `model` argument is a string."
                 )
-
+        print('Trying to use PEFT Model')   # debug
         if peft_config is not None:
-            print('Using PEFT Model')   # debug
+            
             model = get_peft_model(model, peft_config)
             print(type(model))
 
