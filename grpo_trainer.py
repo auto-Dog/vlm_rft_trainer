@@ -402,7 +402,8 @@ class Qwen2VLGRPOTrainer(Trainer):
 
         # Generate completions
         with unwrap_model_for_generation(model, self.accelerator) as unwrapped_model:
-            prompt_inputs['pixel_values'] = prompt_inputs['pixel_values'][None]
+            # prompt_inputs['pixel_values'] = prompt_inputs['pixel_values'][None]   # if batchsize per device>1, use this
+            prompt_inputs['pixel_values'] = prompt_inputs['pixel_values'].repeat_interleave(self.num_generations, dim=0).view(-1, pixel_values.shape[-1]) 
             prompt_completion_ids = unwrapped_model.generate(**prompt_inputs, generation_config=self.generation_config)
 
             prompt_length = prompt_ids.size(1)
