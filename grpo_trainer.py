@@ -411,7 +411,7 @@ class Qwen2VLGRPOTrainer(Trainer):
             prompt_mask = prompt_mask.repeat_interleave(self.num_generations, dim=0)
 
         # Mask everything after the first EOS token
-        is_eos = completion_ids == self.processing_class.eos_token_id
+        is_eos = completion_ids == self.processing_class.tokenizer.eos_token_id # debug
         device = self.accelerator.device
         eos_idx = torch.full((is_eos.size(0),), is_eos.size(1), dtype=torch.long, device=device)
         eos_idx[is_eos.any(dim=1)] = is_eos.int().argmax(dim=1)[is_eos.any(dim=1)]
