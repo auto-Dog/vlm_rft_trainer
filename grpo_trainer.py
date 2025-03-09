@@ -222,7 +222,9 @@ class Qwen2VLGRPOTrainer(Trainer):
                 )
 
         if peft_config is not None:
+            print('Using PEFT Model')   # debug
             model = get_peft_model(model, peft_config)
+            print(type(model))
 
         # Reference model
         if is_deepspeed_zero3_enabled():
