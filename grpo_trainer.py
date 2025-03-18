@@ -392,8 +392,8 @@ class Qwen2VLGRPOTrainer(Trainer):
         prompt_inputs = super()._prepare_inputs(prompt_inputs)
 
         prompt_ids, prompt_mask = prompt_inputs["input_ids"], prompt_inputs["attention_mask"]
-        pixel_values = prompt_inputs["pixel_values"] if "pixel_values" in prompt_inputs else None
-        image_grid_thw = prompt_inputs["image_grid_thw"] if "image_grid_thw" in prompt_inputs else None
+        # pixel_values = prompt_inputs["pixel_values"] if "pixel_values" in prompt_inputs else None
+        # image_grid_thw = prompt_inputs["image_grid_thw"] if "image_grid_thw" in prompt_inputs else None
 
         
         if self.max_prompt_length is not None:
@@ -421,8 +421,8 @@ class Qwen2VLGRPOTrainer(Trainer):
 
         # Concatenate prompt_mask with completion_mask for logit computation
         attention_mask = torch.cat([prompt_mask, completion_mask], dim=1)  # (B*G, P+C)
-        pixel_values = prompt_inputs["pixel_values"].repeat_interleave(self.num_generations, dim=0).view(-1, pixel_values.shape[-1])
-        image_grid_thw = prompt_inputs["image_grid_thw"].repeat_interleave(self.num_generations, dim=0)
+        pixel_values = prompt_inputs["pixel_values"].repeat_interleave(self.num_generations, dim=0).view(-1, pixel_values.shape[-1])  if "pixel_values" in prompt_inputs else None
+        image_grid_thw = prompt_inputs["image_grid_thw"].repeat_interleave(self.num_generations, dim=0) if "image_grid_thw" in prompt_inputs else None
 
         per_token_logps = self._get_per_token_logps(model, prompt_completion_ids, attention_mask, pixel_values, image_grid_thw)
         # Get rid of the prompt (-1 because of the shift done in get_per_token_logps)
