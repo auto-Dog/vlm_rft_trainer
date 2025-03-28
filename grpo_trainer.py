@@ -392,8 +392,8 @@ class Qwen2VLGRPOTrainer(Trainer):
         prompt_inputs = super()._prepare_inputs(prompt_inputs)
 
         prompt_ids, prompt_mask = prompt_inputs["input_ids"], prompt_inputs["attention_mask"]
-        # pixel_values = prompt_inputs["pixel_values"] if "pixel_values" in prompt_inputs else None
-        # image_grid_thw = prompt_inputs["image_grid_thw"] if "image_grid_thw" in prompt_inputs else None
+        pixel_values = prompt_inputs["pixel_values"] if "pixel_values" in prompt_inputs else None
+        image_grid_thw = prompt_inputs["image_grid_thw"] if "image_grid_thw" in prompt_inputs else None
 
         
         if self.max_prompt_length is not None:
